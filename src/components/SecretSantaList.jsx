@@ -1,4 +1,7 @@
 import React from 'react';
+import {Link} from 'react-router-dom'
+import './SecretSantaList.sass';
+import {useEncryptor} from '../hooks'
 
 const people = {
   0: {
@@ -19,7 +22,7 @@ const people = {
   3: {
     id: 3,
     name: 'Nick',
-    blacklist: [2]
+    blacklist: [2,5,6,4]
   },
   4: {
     id: 4,
@@ -69,6 +72,8 @@ const resolveSecretSanta = (secretSanta, available = [], unchosenAvailable = [],
   const unchosen = unchosenAvailable[randomJ]
   const randomI = Math.floor((available.length - 1) * Math.random())
   const chosen = available[randomI]
+  console.log(available.length)
+  console.log(chosen)
   const chosenGiftTo = people[chosen.giftTo]
 
   if(secretSanta.blacklist.includes(chosen.giftTo)){
@@ -111,19 +116,11 @@ const chooseSecretSanta = () => {
 const SecretSanta = ({secretSantaId, blacklist = true}) => {
   const person = people[secretSantaId]
   const giftTo = people[person.giftTo]
-  const renderGiftTo = () => {
-    if(!blacklist){return null}
-    return (
-      <>SecretSanta: {giftTo.name}</>
-    )
-  }
+  const giftToEncrypted = useEncryptor(giftTo)
   return (
-    <div>
-      {person.name}
-      <br/>
-      {renderGiftTo()}
-      <br/>
-      <br/>
+    <div className="person">
+      <div className="name">{person.name}</div>
+      <Link className="secret-santa" to={`/my_recipient?d=${giftToEncrypted}`} >Recipient</Link>
     </div>
   )
 }
@@ -134,9 +131,9 @@ const SecretSantaList = () => {
     return Object.values(secretSantas).map( person => <SecretSanta key={person.id} secretSantaId={person.id}/>)
   }
   return ( 
-    <>
+    <div className="person-array">
       {renderSecretSantas()}
-    </>
+    </div>
    )
 }
  
