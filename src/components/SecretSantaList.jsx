@@ -22,7 +22,7 @@ const people = {
   3: {
     id: 3,
     name: 'Nick',
-    blacklist: [2,5,6,4]
+    blacklist: [2]
   },
   4: {
     id: 4,
@@ -72,8 +72,6 @@ const resolveSecretSanta = (secretSanta, available = [], unchosenAvailable = [],
   const unchosen = unchosenAvailable[randomJ]
   const randomI = Math.floor((available.length - 1) * Math.random())
   const chosen = available[randomI]
-  console.log(available.length)
-  console.log(chosen)
   const chosenGiftTo = people[chosen.giftTo]
 
   if(secretSanta.blacklist.includes(chosen.giftTo)){
@@ -113,9 +111,9 @@ const chooseSecretSanta = () => {
   return chosen
 }
 
-const SecretSanta = ({secretSantaId, blacklist = true}) => {
-  const person = people[secretSantaId]
-  const giftTo = people[person.giftTo]
+const SecretSanta = ({secretSantaId, blacklist = true, secretSantaList}) => {
+  const person = secretSantaList[secretSantaId]
+  const giftTo = secretSantaList[person.giftTo]
   const giftToEncrypted = useEncryptor(giftTo)
   return (
     <div className="person">
@@ -125,15 +123,19 @@ const SecretSanta = ({secretSantaId, blacklist = true}) => {
   )
 }
 
-const SecretSantaList = () => {
-  const secretSantas = chooseSecretSanta()
+const SecretSantaList = ({incomingData}) => {
+  const secretSantas = incomingData ? incomingData : chooseSecretSanta()
+  const permaSecretSantas = useEncryptor(secretSantas)
   const renderSecretSantas = () => {
-    return Object.values(secretSantas).map( person => <SecretSanta key={person.id} secretSantaId={person.id}/>)
+    return Object.values(secretSantas).map( person => <SecretSanta secretSantaList={secretSantas} key={person.id} secretSantaId={person.id}/>)
   }
-  return ( 
+  return (
+    <>
+    <Link to={`/?d=${permaSecretSantas}`}>Permalink to this list</Link>
     <div className="person-array">
       {renderSecretSantas()}
     </div>
+    </>
    )
 }
  

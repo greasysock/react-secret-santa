@@ -8,6 +8,7 @@ export const useEncryptor = (obj) => {
 }
 
 export const useDecryptor = (encryptedObj) => {
+  if(!encryptedObj){return null}
   const crypto = new SimpleCrypto(super_secret_secret)
-  return crypto.decrypt(encryptedObj)
+  return JSON.parse(crypto.decrypt(encryptedObj))
 }

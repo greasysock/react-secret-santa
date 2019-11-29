@@ -1,9 +1,12 @@
 import React from 'react'
+import {useDecryptor} from '../hooks'
 import SecretSantaList from '../components/SecretSantaList'
 
-const SecretSanta = () => {
+const SecretSanta = ({location}) => {
+  const incomingData = (location.search !== '') ? location.search.substr(3) : null
+  const incomingObject = useDecryptor(incomingData)
   return (
-    <SecretSantaList/>
+    <SecretSantaList incomingData={incomingObject}/>
   )
 }
 
