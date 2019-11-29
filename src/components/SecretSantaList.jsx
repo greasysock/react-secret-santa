@@ -114,11 +114,11 @@ const chooseSecretSanta = () => {
 const SecretSanta = ({secretSantaId, blacklist = true, secretSantaList}) => {
   const person = secretSantaList[secretSantaId]
   const giftTo = secretSantaList[person.giftTo]
-  const giftToEncrypted = useEncryptor(giftTo)
+  const giftToEncrypted = useEncryptor({name: person.name, giftTo: giftTo.name})
   return (
     <div className="person">
       <div className="name">{person.name}</div>
-      <Link className="secret-santa" to={`/my_recipient?d=${giftToEncrypted}`} >Recipient</Link>
+      <Link className="secret-santa" to={`my_recipient?d=${giftToEncrypted}`} >Recipient</Link>
     </div>
   )
 }
